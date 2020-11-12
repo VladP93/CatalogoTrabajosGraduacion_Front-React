@@ -1,7 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import axios from "axios";
+import URL from "./Api";
 
 function App() {
+  const url = URL.getUrl;
+
+  axios.get(url + "tipos").then((res) => {
+    console.log(res.data);
+  });
+
   return (
     <div className="App">
       <header className="App-header">
