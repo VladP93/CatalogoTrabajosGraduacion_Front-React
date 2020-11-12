@@ -1,33 +1,45 @@
-import logo from "./logo.svg";
+import React, { useState } from "react";
 import "./App.css";
 import axios from "axios";
 import URL from "./Api";
 
-function App() {
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+
+import Navbar from "./components/shared/Navbar";
+import Welcome from "./pages/Welcome";
+import AddDegreeWork from "./pages/AddDegreeWork";
+import SearchDegreeWork from "./pages/SearchDegreeWork";
+import Stats from "./pages/Stats";
+
+export default function App() {
+  const [page, setPage] = useState("welcome");
+
   const url = URL.getUrl;
 
-  axios.get(url + "tipos").then((res) => {
-    console.log(res.data);
-  });
+  const pageHandler = () => {
+    switch (page) {
+      case "welcome":
+        return <Welcome />;
+      case "addDegreeWork":
+        return <AddDegreeWork />;
+      case "searchDegreeWork":
+        return <SearchDegreeWork />;
+      case "stats":
+        return <Stats />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <Navbar setPage={setPage} />
       </header>
+      <br />
+      {pageHandler()}
     </div>
   );
 }
-
-export default App;
