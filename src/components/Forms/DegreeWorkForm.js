@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { Toast } from "primereact/toast";
 import "./DegreeWorkForm.css";
 
 import axios from "axios";
 import URL from "../../Api";
 
 export default function DegreeWorkForm(props) {
-  const { edit, idTrabajo } = props;
+  const { edit, idTrabajo, setPage, toast } = props;
   const [facultades, setFacultades] = useState([]);
   const [selectedFacultad, setSelectedFacultad] = useState("");
   const [carreras, setCarreras] = useState([carrerasDefault()]);
@@ -20,7 +19,30 @@ export default function DegreeWorkForm(props) {
   const [formData, setFormData] = useState(defaultValues());
   const [reload, setReload] = useState(false);
   const url = URL.getUrl;
-  var toast;
+
+  useEffect(() => {
+    if (idTrabajo) {
+      axios.get(url + "trabajosGraduacion/" + idTrabajo).then((res) => {
+        const datos = res.data;
+
+        setFormData(datos);
+        document.getElementById("titulo").value = datos.titulo;
+        document.getElementById("autor").value = datos.autor;
+        setYear(datos.anio);
+        setSelectedTipo(datos.tipo);
+
+        axios.get(url + "carreras").then((resC) => {
+          resC.data.forEach((c) => {
+            if (datos.carrera === c.idCarrera) {
+              setSelectedFacultad(c.facultad);
+            }
+          });
+        });
+
+        setSelectedCarrera(datos.carrera);
+      });
+    }
+  }, [idTrabajo, url]);
 
   useEffect(() => {
     axios.get(url + "facultades").then((res) => {
@@ -82,19 +104,35 @@ export default function DegreeWorkForm(props) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    formData.anio = year;
-    formData.carrera = selectedCarrera;
-    formData.tipo = selectedTipo;
-
     if (validateForm()) {
-      axios.post(url + "trabajosGraduacion", formData).then(() => {
-        toast.show({
-          severity: "success",
-          summary: "Registro agregado",
-          detail: "Trabajo de graduación agregado exitosamente",
+      if (edit) {
+        axios
+          .put(url + "trabajosGraduacion/" + idTrabajo, formData)
+          .then(() => {
+            toast.show({
+              severity: "success",
+              summary: "Registro editado",
+              detail:
+                "Trabajo de graduación editado exitosamente, redirigiendo...",
+            });
+            setTimeout(() => {
+              setPage("searchDegreeWork");
+            }, 1000);
+          });
+      } else {
+        formData.anio = year;
+        formData.carrera = selectedCarrera;
+        formData.tipo = selectedTipo;
+
+        axios.post(url + "trabajosGraduacion", formData).then(() => {
+          toast.show({
+            severity: "success",
+            summary: "Registro agregado",
+            detail: "Trabajo de graduación agregado exitosamente",
+          });
+          resetForm();
         });
-        resetForm();
-      });
+      }
     }
   };
 
@@ -174,14 +212,13 @@ export default function DegreeWorkForm(props) {
           </div>
         </div>
       </form>
-      <Toast ref={(el) => (toast = el)} />
     </div>
   );
 
   function validateForm() {
     var ok = true;
 
-    if (!formData.anio || formData.anio === 0 || formData.anio === "") {
+    if (!year || year === 0 || year === "") {
       toast.show({
         severity: "error",
         summary: "Año incorrecto",
@@ -189,11 +226,7 @@ export default function DegreeWorkForm(props) {
       });
       ok = false;
     }
-    if (
-      !formData.carrera ||
-      formData.carrera === 0 ||
-      formData.carrera === ""
-    ) {
+    if (!selectedCarrera || selectedCarrera === 0 || selectedCarrera === "") {
       toast.show({
         severity: "error",
         summary: "Carrera incorrecta",
@@ -201,7 +234,7 @@ export default function DegreeWorkForm(props) {
       });
       ok = false;
     }
-    if (!formData.tipo || formData.tipo === 0 || formData.tipo === "") {
+    if (!selectedTipo || selectedTipo === 0 || selectedTipo === "") {
       toast.show({
         severity: "error",
         summary: "Tipo incorrecto",
