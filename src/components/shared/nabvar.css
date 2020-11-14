@@ -3,3 +3,10 @@
   z-index: 1;
   width: 100%;
 }
+
+.active .p-menuitem-text {
+  color: #2193f3 !important;
+}
+.active .p-menuitem-icon {
+  color: #2193f3 !important;
+}

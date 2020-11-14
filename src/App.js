@@ -52,7 +52,7 @@ export default function App() {
   return (
     <div className="App">
       <header>
-        <Navbar setPage={setPage} />
+        <Navbar setPage={setPage} page={page} />
       </header>
       {pageHandler()}
       <Footer />
