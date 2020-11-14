@@ -54,9 +54,7 @@ export default function App() {
       <header>
         <Navbar setPage={setPage} />
       </header>
-      <br />
       {pageHandler()}
-      <br />
       <Footer />
       <Toast ref={(el) => setToast(el)} />
     </div>
