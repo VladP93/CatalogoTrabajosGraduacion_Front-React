@@ -217,8 +217,10 @@ export default function DegreeWorkForm(props) {
 
   function validateForm() {
     var ok = true;
+    var d = new Date();
+    var n = d.getFullYear();
 
-    if (!year || year === 0 || year === "") {
+    if (!year || year === 0 || year === "" || year > n) {
       toast.show({
         severity: "error",
         summary: "Año incorrecto",
