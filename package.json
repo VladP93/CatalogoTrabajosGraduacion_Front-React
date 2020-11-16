@@ -7,6 +7,7 @@
     "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.2.2",
     "axios": "^0.21.0",
+    "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
     "primeflex": "^2.0.0",
     "primeicons": "^4.0.0",
