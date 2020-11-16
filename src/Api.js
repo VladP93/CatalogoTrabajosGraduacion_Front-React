@@ -1,5 +1,5 @@
 const url = {
-  getUrl: "https://localhost:44341/api/",
+  getUrl: "http://gpaniagua15-001-site1.itempurl.com/api/",
 };
 
 export default url;

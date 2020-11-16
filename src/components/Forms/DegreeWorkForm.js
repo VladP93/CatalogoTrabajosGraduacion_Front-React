@@ -206,7 +206,7 @@ export default function DegreeWorkForm(props) {
           >
             <Button
               label={edit ? "Editar" : "Agregar"}
-              icon="pi pi-plus"
+              icon={edit ? "pi pi-pencil" : "pi pi-plus"}
               iconPos="right"
             />
           </div>
