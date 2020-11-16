@@ -19,9 +19,12 @@ export default function Stats() {
   const [healthChartData, setHealthChartData] = useState({});
   const [totalHealth, setTotalHealth] = useState(0);
   const [facultyChartData, setFacultyChartData] = useState({});
-  const [totalFaculty, setTotalFaculty] = useState(0);
+  const [careerChartData, setCareerChartData] = useState({});
+  const [yearChartData, setYearChartData] = useState({});
+
   const url = URL.getUrl;
 
+  //Datos Generales
   useEffect(() => {
     axios.get(url + "Stats").then((res) => {
       var labels = [];
@@ -47,6 +50,7 @@ export default function Stats() {
     });
   }, [url]);
 
+  //Datos para ingeniería
   useEffect(() => {
     axios.get(url + "Stats/statsByEngineering").then((res) => {
       var labels = [];
@@ -72,6 +76,7 @@ export default function Stats() {
     });
   }, [url]);
 
+  //Datos para empresariales
   useEffect(() => {
     axios.get(url + "Stats/statsByBusinessSc").then((res) => {
       var labels = [];
@@ -97,6 +102,7 @@ export default function Stats() {
     });
   }, [url]);
 
+  //Datos para humanidades
   useEffect(() => {
     axios.get(url + "Stats/statsByHumanitySc").then((res) => {
       var labels = [];
@@ -122,6 +128,7 @@ export default function Stats() {
     });
   }, [url]);
 
+  //Datos para medicina
   useEffect(() => {
     axios.get(url + "Stats/statsByHealthSc").then((res) => {
       var labels = [];
@@ -147,16 +154,15 @@ export default function Stats() {
     });
   }, [url]);
 
+  //Datos por facultad
   useEffect(() => {
     axios.get(url + "Stats/statsByFaculty").then((res) => {
       var labels = [];
       var data = [];
-      var total = 0;
       const tempChartData = {};
       res.data.forEach((d) => {
         labels.push(d.tipo);
         data.push(d.cantidad);
-        total += d.cantidad;
       });
       tempChartData.labels = labels;
       tempChartData.datasets = [
@@ -168,7 +174,52 @@ export default function Stats() {
       ];
 
       setFacultyChartData(tempChartData);
-      setTotalFaculty(total);
+    });
+  }, [url]);
+
+  //Datos por carrera
+  useEffect(() => {
+    axios.get(url + "Stats/statsByCareer").then((res) => {
+      var labels = [];
+      var data = [];
+      const tempChartData = {};
+      res.data.forEach((d) => {
+        labels.push(d.tipo);
+        data.push(d.cantidad);
+      });
+      tempChartData.labels = labels;
+      tempChartData.datasets = [
+        {
+          label: "Cantidad de trabajos",
+          data,
+          borderColor: "#5d7efc",
+        },
+      ];
+      console.log(tempChartData);
+      setCareerChartData(tempChartData);
+    });
+  }, [url]);
+
+  //Datos por año
+  useEffect(() => {
+    axios.get(url + "Stats/statsByYear").then((res) => {
+      var labels = [];
+      var data = [];
+      const tempChartData = {};
+      res.data.forEach((d) => {
+        labels.push(d.tipo);
+        data.push(d.cantidad);
+      });
+      tempChartData.labels = labels;
+      tempChartData.datasets = [
+        {
+          label: "Cantidad de trabajos",
+          data,
+          borderColor: "#5d7efc",
+        },
+      ];
+
+      setYearChartData(tempChartData);
     });
   }, [url]);
 
@@ -211,13 +262,27 @@ export default function Stats() {
           />
         </div>
         {/* Main Chart 2 */}
+        <div className="p-col-12 p-md-12 p-lg-12 chart-container">
+          <LineChart
+            chartData={facultyChartData}
+            title={"Trabajos por facultad: " + totalGeneral}
+          />
+        </div>
+        {/* Main Chart 3 */}
+        <div className="p-col-12 p-md-12 p-lg-12 chart-container">
+          <LineChart
+            chartData={careerChartData}
+            title={"Trabajos por carrera: " + totalGeneral}
+          />
+        </div>
+        {/* Main Chart 4 */}
         <div
           className="p-col-12 p-md-12 p-lg-12 chart-container"
           style={{ marginBottom: 50 }}
         >
           <LineChart
-            chartData={facultyChartData}
-            title={"Trabajos por facultad: " + totalFaculty}
+            chartData={yearChartData}
+            title={"Trabajos por año: " + totalGeneral}
           />
         </div>
       </div>
