@@ -95,6 +95,7 @@ export default function DegreeWorkForm(props) {
   }, [url, reload]);
 
   const onChange = (e) => {
+    console.log(formData);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -105,6 +106,9 @@ export default function DegreeWorkForm(props) {
     e.preventDefault();
 
     if (validateForm()) {
+      formData.anio = year;
+      formData.carrera = selectedCarrera;
+      formData.tipo = selectedTipo;
       if (edit) {
         axios
           .put(url + "trabajosGraduacion/" + idTrabajo, formData)
@@ -120,10 +124,6 @@ export default function DegreeWorkForm(props) {
             }, 1000);
           });
       } else {
-        formData.anio = year;
-        formData.carrera = selectedCarrera;
-        formData.tipo = selectedTipo;
-
         axios.post(url + "trabajosGraduacion", formData).then(() => {
           toast.show({
             severity: "success",

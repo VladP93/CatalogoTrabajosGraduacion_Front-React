@@ -96,7 +96,7 @@ export default function SearchDegreeWork(props) {
           value={data}
           paginator={true}
           rows={5}
-          emptyMessage="No customers found."
+          emptyMessage="No se encontraron trabajos."
           scrollable
           scrollHeight="300px"
           className="fWidth"
